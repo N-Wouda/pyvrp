@@ -2,25 +2,25 @@
 #include "ordered_crossover.h"
 #include "selective_route_exchange.h"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
-PYBIND11_MODULE(_crossover, m)
+NB_MODULE(_crossover, m)
 {
     m.def("ordered_crossover",
           &pyvrp::crossover::orderedCrossover,
-          py::arg("parents"),
-          py::arg("data"),
-          py::arg("indices"),
+          nb::arg("parents"),
+          nb::arg("data"),
+          nb::arg("indices"),
           DOC(pyvrp, crossover, orderedCrossover));
 
     m.def("selective_route_exchange",
           &pyvrp::crossover::selectiveRouteExchange,
-          py::arg("parents"),
-          py::arg("data"),
-          py::arg("cost_evaluator"),
-          py::arg("start_indices"),
-          py::arg("num_moved_routes"),
+          nb::arg("parents"),
+          nb::arg("data"),
+          nb::arg("cost_evaluator"),
+          nb::arg("start_indices"),
+          nb::arg("num_moved_routes"),
           DOC(pyvrp, crossover, selectiveRouteExchange));
 }

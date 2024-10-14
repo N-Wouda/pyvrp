@@ -1,15 +1,15 @@
 #include "diversity.h"
 #include "diversity_docs.h"
 
-#include <pybind11/pybind11.h>
+#include <nanobind/nanobind.h>
 
-namespace py = pybind11;
+namespace nb = nanobind;
 
-PYBIND11_MODULE(_diversity, m)
+NB_MODULE(_diversity, m)
 {
     m.def("broken_pairs_distance",
           &pyvrp::diversity::brokenPairsDistance,
-          py::arg("first"),
-          py::arg("second"),
+          nb::arg("first"),
+          nb::arg("second"),
           DOC(pyvrp, diversity, brokenPairsDistance));
 }

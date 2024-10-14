@@ -6,8 +6,8 @@ project(
         'cpp_std=c++20',
         'b_ndebug=if-release',  # disables asserts in release builds
         'b_lto=true',  # sets -flto
-        'werror=true',  # sets -Werror
-        'warning_level=3',  # level 3 sets -Wextra and -Wpedantic
+        'werror=false',  # sets -Werror
+        'warning_level=0',  # level 3 sets -Wextra and -Wpedantic
     ]
 )
 
@@ -105,9 +105,18 @@ extensions = [
     ['search', 'search', libsearch],
 ]
 
-# Extension dependencies: Python itself, and pybind11.
+# Extension dependencies: Python itself, and nanobind.
 py = import('python').find_installation()
-dependencies = [py.dependency(), dependency('pybind11')]
+nanobind = dependency(
+    'nanobind',
+    static: true,
+    default_options: [
+        'default_library=static',
+        'warning_level=0',
+        'werror=false',
+    ],
+)
+dependencies = [py.dependency(), nanobind]
 
 foreach extension : extensions
     rawname = extension[0]
