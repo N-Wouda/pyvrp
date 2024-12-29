@@ -73,6 +73,7 @@ def _solve(
     per_client: bool,
     stats_dir: Path | None,
     sol_dir: Path | None,
+    display: bool,
     **kwargs,
 ) -> tuple[str, str, float, int, float]:
     """
@@ -99,6 +100,8 @@ def _solve(
         The directory to write runtime statistics to.
     sol_dir
         The directory to write the best found solutions to.
+    display
+        Whether to display the solver progress.
 
     Returns
     -------
@@ -107,9 +110,9 @@ def _solve(
         the solution cost, the number of iterations, and the runtime.
     """
     if kwargs.get("config_loc"):
-        params = SolveParams.from_file(kwargs["config_loc"])
+        SolveParams.from_file(kwargs["config_loc"])
     else:
-        params = SolveParams()
+        SolveParams()
 
     data = read(data_loc, round_func)
 
@@ -126,7 +129,13 @@ def _solve(
         ]
     )
 
-    result = solve(data, stop, seed, bool(stats_dir), params=params)
+    result = solve(
+        data,
+        stop,
+        seed,
+        collect_stats=bool(stats_dir) or display,
+        display=display,
+    )
     instance_name = data_loc.stem
 
     if stats_dir:
@@ -247,6 +256,12 @@ def main():
 
     msg = "Whether to scale stopping criteria values by the number of clients."
     stop.add_argument("--per_client", action="store_true")
+
+    msg = "Whether to display the solver progress."
+    parser.add_argument("--display", action="store_true", help=msg)
+
+    msg = "Algorithm to use for solving. One of ['ils', 'hgs']."
+    parser.add_argument("--algorithm", choices=["ils", "hgs"], default="hgs")
 
     benchmark(**vars(parser.parse_args()))
 
